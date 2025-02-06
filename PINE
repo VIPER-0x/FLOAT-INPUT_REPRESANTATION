@@ -1,5 +1,3 @@
-
-//
 //@version=6
 indicator('Decimal Digits Calculation', shorttitle = 'DDC', overlay = true)
 
@@ -29,6 +27,11 @@ f_get_decimal_part(_in) =>
     _dec_part = _in - _int_part
     _dec_part
 
+// Function to calculate the number of integer digits
+f_get_integer_digits(_in) =>
+    _in_abs = math.abs(_in)
+    _in_abs < 1 ? 1 : math.floor(math.log10(_in_abs)) + 1
+
 // Input variable for the close price
 var float input = close
 
@@ -44,8 +47,11 @@ integer_part = f_get_integer_part(input)
 // Get the decimal part
 decimal_part = f_get_decimal_part(input)
 
+// Calculate the number of integer digits
+integer_digits = f_get_integer_digits(input)
+
 // Create a table to display the results
-var table results_table = table.new(position.bottom_center, 6, 2, border_width = 1, bgcolor = color.gray)
+var table results_table = table.new(position.bottom_center, 7, 2, border_width = 1, bgcolor = color.gray)
 
 // Table header
 if bar_index == 0
@@ -68,3 +74,6 @@ if barstate.islast
 
     table.cell(results_table, 5, 0, 'Decimal Part', bgcolor = color.rgb(0, 37, 169), text_color = color.rgb(255, 255, 255), text_size = size.normal)
     table.cell(results_table, 5, 1, str.tostring(decimal_part), bgcolor = color.rgb(0, 0, 0), text_color = color.rgb(255, 255, 255), text_size = size.normal)
+
+    table.cell(results_table, 6, 0, 'Integer Digits', bgcolor = color.rgb(0, 0, 0), text_color = color.rgb(255, 255, 255), text_size = size.normal)
+    table.cell(results_table, 6, 1, str.tostring(integer_digits), bgcolor = color.rgb(0, 0, 0), text_color = color.rgb(255, 255, 255), text_size = size.normal)
